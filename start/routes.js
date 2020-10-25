@@ -17,5 +17,9 @@
 const Route = use('Route')
 
 Route
-	.post('/users', 'UserController.create')
-	.validator('User')
+	.post('/users', 'UserController.store')
+	.validator('CreateUser')
+
+Route
+	.post('/session', 'SessionController.store')
+	.validator('CreateSession')

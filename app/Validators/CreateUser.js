@@ -1,6 +1,6 @@
 'use strict'
 
-class User {
+class CreateUser {
 	get rules () {
 		return {
 			email: 'required|email|unique:users',
@@ -28,4 +28,4 @@ class User {
   }
 }
 
-module.exports = User
+module.exports = CreateUser
