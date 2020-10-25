@@ -12,10 +12,33 @@
 */
 
 /** @type {import('@adonisjs/lucid/src/Factory')} */
-// const Factory = use('Factory')
+const Factory = use('Factory')
+const Env = use('Env')
 
-// Factory.blueprint('App/Models/User', (faker) => {
-//   return {
-//     username: faker.username()
-//   }
-// })
+// Role blueprint
+Factory.blueprint('Adonis/Acl/Role', (faker, i, data) => {
+  return {
+    name: data.name,
+    slug: data.slug,
+    description: data.description
+  };
+});
+
+// Permission blueprint
+Factory.blueprint('Adonis/Acl/Permission', (faker, i, data) => {
+  return {
+    name: data.name,
+    slug: data.slug,
+    description: data.description
+  };
+});
+
+Factory.blueprint('App/Models/User', (faker, index, data) => {
+  const defaultValue = {
+    username: faker.username(),
+    email: faker.email(),
+    password: Env.get('PASSWORD', 'secret'),
+  }
+
+  return Object.assign(defaultValue, data)
+})
