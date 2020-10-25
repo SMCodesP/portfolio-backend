@@ -23,3 +23,12 @@ Route
 Route
 	.post('/session', 'SessionController.store')
 	.validator('CreateSession')
+
+
+Route.group(() => {
+	Route
+		.post('/categories', 'ProductCategoryController.store')
+		.middleware('can:create_plugin')
+		.validator('CreateCategory')
+})
+	.middleware('auth:jwt');

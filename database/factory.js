@@ -33,12 +33,6 @@ Factory.blueprint('Adonis/Acl/Permission', (faker, i, data) => {
   };
 });
 
-Factory.blueprint('App/Models/User', (faker, index, data) => {
-  const defaultValue = {
-    username: faker.username(),
-    email: faker.email(),
-    password: Env.get('PASSWORD', 'secret'),
-  }
-
-  return Object.assign(defaultValue, data)
-})
+Factory.blueprint('App/Models/User', (faker, i, data) => {
+  return data;
+});
