@@ -11,6 +11,7 @@
 |
 */
 const providers = [
+  '@adonisjs/redis/providers/RedisProvider',
 	'@adonisjs/validator/providers/ValidatorProvider',
   '@adonisjs/framework/providers/AppProvider',
   '@adonisjs/auth/providers/AuthProvider',

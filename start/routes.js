@@ -27,8 +27,10 @@ Route
 
 Route.group(() => {
 	Route
-		.post('/categories', 'ProductCategoryController.store')
+		.post('/categories', 'CategoryController.store')
 		.middleware('can:create_plugin')
 		.validator('CreateCategory')
+	Route
+		.get('/categories', 'CategoryController.index')
 })
 	.middleware('auth:jwt');
