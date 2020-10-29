@@ -34,3 +34,9 @@ Route.group(() => {
 		.get('/categories', 'CategoryController.index')
 })
 	.middleware('auth:jwt');
+
+
+Route.group(() => {
+	Route
+		.post('/auth/discord', 'DiscordOAuthController.store')
+})
