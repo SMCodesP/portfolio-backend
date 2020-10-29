@@ -20,7 +20,6 @@ class CreateAdministratorSeeder {
   	const masterRole = await Role.findBy('slug', 'master')
     const user = await Factory.model('App/Models/User').create({
       username: 'admin',
-      email: 'admin@test.com',
       password: '5NY601Igh2$g5JREKF8@yJ5rw8',
     })
     await user.roles().attach([masterRole.id])
