@@ -18,10 +18,12 @@ const Route = use('Route')
 
 Route
 	.post('/users', 'UserController.store')
+	.middleware(['recaptcha'])
 	.validator('CreateUser')
 
 Route
 	.post('/session', 'SessionController.store')
+	.middleware(['recaptcha'])
 	.validator('CreateSession')
 
 

@@ -20,6 +20,7 @@ const providers = [
   '@adonisjs/lucid/providers/LucidProvider',
   '@adonisjs/ally/providers/AllyProvider',
   'adonis-acl/providers/AclProvider',
+  'adonis-recaptcha2/providers/RecaptchaProvider',
 ]
 
 /*
