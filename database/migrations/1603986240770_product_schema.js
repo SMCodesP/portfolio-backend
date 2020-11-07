@@ -8,13 +8,12 @@ class ProductSchema extends Schema {
     this.create('products', (table) => {
       table.increments()
 	    table.string('title', 25)
-	    table.string('documentation_link', 40)
+	    table.string('documentation_link', 255)
 	    table.string('image_small', 40)
 	    table.string('image_large', 40)
 	    table.text('description', 255)
 	    table.decimal('money', 10, 2)
-      table.integer('category_id').unsigned().index()
-      table.foreign('category_id').references('id').on('categories').onDelete('cascade')
+      table.integer('category_id').unsigned().references('id').inTable('categories').onDelete('cascade')
       table.timestamps()
     })
   }

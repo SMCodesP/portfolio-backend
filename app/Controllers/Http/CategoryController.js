@@ -10,33 +10,46 @@ class ProductCategoryController {
 
 		const response = await Category.create(data)
 
-    await Redis.set(`categories:${response.id}`, JSON.stringify(response))
+		const cachedCategories = await Redis.get('users')
+    if (cachedCategories) {
+      const cachedCategoriesParsed = JSON.parse(cachedCategories)
+      cachedCategoriesParsed.push(response)
+      await Redis.set('categories', JSON.stringify(cachedCategoriesParsed))
+    } else {
+    	const allCategories = await Category.all()
+
+    	await Redis.set('categories', JSON.stringify(allCategories))
+    }
 
 		return response
 	}
 
-	async index({ request }) { 
+	async index({ request }) {
 		const id = request.input('id')
+		const all = request.input('all')
 
 		if (id) {
-			const category = await Category.findBy('id', id)
+			const category = await Category.findOrFail(id)
 
-			await Redis.set(`categories:${id}`, JSON.stringify(category))
+			if (all) {
+	  		await category.load('products')
+	  	}
 
 			return category
 		} else {
-			const keys = await Redis.keys('categories:*')
-			let categoriesCached = keys.map(async (name) => JSON.parse(await Redis.get(name)))
-			console.log(categoriesCached)
+			const cache = (all) ? 'categories_all' : 'categories'
+			const categoriesCached = await Redis.get(cache)
 
-			categoriesCached = await Promise.all(categoriesCached)
+			const categoriesCachedParsed = JSON.parse(categoriesCached)
 
-			let categories = (categoriesCached > 0) ? categoriesCached : await (async () => {
-				let categoriesForceCache = await Category.all()
+			let categories = (categoriesCachedParsed && (categoriesCachedParsed.length || 0 > 0)) ? categoriesCachedParsed : await (async () => {
+				let categoriesForceCache = (all) ? await Category
+					.query()
+					.with('products')
+					.fetch() : await Category.all()
 
-				categoriesForceCache.toJSON().map(async (category) => {
-					await Redis.set(`categories:${category.id}`, JSON.stringify(category))
-				})
+				await Redis.set(cache, JSON.stringify(categoriesForceCache))
+
 				return categoriesForceCache.toJSON()
 			})();
 

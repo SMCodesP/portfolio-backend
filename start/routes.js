@@ -23,20 +23,26 @@ Route
 
 Route
 	.post('/session', 'SessionController.store')
-	.middleware(['recaptcha'])
 	.validator('CreateSession')
-
+	.middleware(['recaptcha'])
 
 Route.group(() => {
 	Route
 		.post('/categories', 'CategoryController.store')
 		.middleware('can:create_plugin')
 		.validator('CreateCategory')
+
 	Route
-		.get('/categories', 'CategoryController.index')
+		.post('/products', 'ProductController.store')
+		.middleware('can:create_plugin')
+		.validator('CreateProduct')
 })
 	.middleware('auth:jwt');
 
+Route
+	.get('/categories', 'CategoryController.index')
+Route
+	.get('/products', 'ProductController.index')
 
 Route.group(() => {
 	Route
