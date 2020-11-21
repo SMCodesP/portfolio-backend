@@ -20,7 +20,7 @@ class ProductCategoryController {
 		} else {
 			const allCategories = await Category.all()
 			
-			await Redis.set('categories_all', JSON.stringify(allCategories.map((category) => {
+			await Redis.set('categories_all', JSON.stringify(allCategories.toJSON().map((category) => {
 				return {
 					...category,
 					products: []
