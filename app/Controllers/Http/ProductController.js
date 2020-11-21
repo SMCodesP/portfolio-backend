@@ -19,9 +19,7 @@ class ProductController {
 
 		const response = await Product.create(data)
 
-		await Redis.set(`products:${response.id}`, JSON.stringify(response))
 		await response.load('category')
-		await Redis.set(`products_all:${response.id}`, JSON.stringify(response))
 
 		return response
 	}
@@ -33,42 +31,13 @@ class ProductController {
 		if (id) {
 
 		} else {
-			let products;
-			const cache = (all) ? 'products_all' : 'products'
-
-			const keys = await Redis.keys(`${cache}:*`)
-			let productsCacheParsed = keys.map(async (name) => JSON.parse(await Redis.get(name)))
-
-			productsCacheParsed = await Promise.all(productsCacheParsed)
-
-			if (productsCacheParsed.length > 0) {
-				products = productsCacheParsed
-			} else {
-				products = await this.createCache(all, cache)				
-			}
-
-			return products
-		}
-	}
-
-	async addCache(name, product) {
-		await Redis.set(`${name}:${product.id}`, JSON.stringify(product))
-	}
-
-	async createCache(all, name) {
-		let productsForceCache = (all) ? await Product
+			const products = (all) ? await Product
 			.query()
 			.with('category')
 			.fetch() : await Product.all()
 
-		productsForceCache = productsForceCache.toJSON()
-
-		const promiseCache = productsForceCache.map(async (product) => {
-			await Redis.set(`${name}:${product.id}`, JSON.stringify(product))
-		})
-		await Promise.all(promiseCache)
-
-		return productsForceCache
+			return products
+		}
 	}
 
 }

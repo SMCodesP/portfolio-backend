@@ -10,30 +10,6 @@ class ProductCategoryController {
 		
 		const response = await Category.create(data)
 		
-		const cachedCategories = await Redis.get('categories')
-		const cachedCategories_all = await Redis.get('categories_all')
-		if (cachedCategories && cachedCategories_all) {
-			let cachedCategoriesParsed = JSON.parse(cachedCategories)
-			let cachedCategoriesParsed_all = JSON.parse(cachedCategories_all)
-			let responseJSON = JSON.parse(JSON.stringify(response))
-
-			cachedCategoriesParsed.push(response)
-			cachedCategoriesParsed_all.push({...responseJSON, products: []})
-
-			await Redis.set('categories', JSON.stringify(cachedCategoriesParsed))
-			await Redis.set('categories_all', JSON.stringify(cachedCategoriesParsed_all))
-		} else {
-			const allCategories = await Category.all()
-			
-			await Redis.set('categories_all', JSON.stringify(allCategories.toJSON().map((category) => {
-				return {
-					...category,
-					products: []
-				}
-			})))
-			await Redis.set('categories', JSON.stringify(allCategories))
-		}
-		
 		return response
 	}
 	
@@ -50,22 +26,12 @@ class ProductCategoryController {
 			
 			return category
 		} else {
-			const cache = (all) ? 'categories_all' : 'categories'
-			const categoriesCached = await Redis.get(cache)
-			
-			const categoriesCachedParsed = JSON.parse(categoriesCached)
-			
-			let categories = (categoriesCachedParsed && (categoriesCachedParsed.length || 0 > 0)) ? categoriesCachedParsed : await (async () => {
-				let categoriesForceCache = (all) ? await Category
+
+			let categories = (all) ? await Category
 				.query()
 				.with('products')
 				.fetch() : await Category.all()
 				
-				await Redis.set(cache, JSON.stringify(categoriesForceCache))
-				
-				return categoriesForceCache.toJSON()
-			})();
-			
 			return categories
 		}
 	}
