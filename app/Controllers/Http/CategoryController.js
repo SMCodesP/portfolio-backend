@@ -16,11 +16,16 @@ class ProductCategoryController {
 			const cachedCategoriesParsed = JSON.parse(cachedCategories)
 			const cachedCategoriesParsed_all = JSON.parse(cachedCategories_all)
 			await Redis.set('categories', JSON.stringify([...cachedCategoriesParsed, response]))
-			await Redis.set('categories_all', JSON.stringify([...cachedCategoriesParsed_all, response]))
+			await Redis.set('categories_all', JSON.stringify([...cachedCategoriesParsed_all, {...response, products: []}]))
 		} else {
 			const allCategories = await Category.all()
 			
-			await Redis.set('categories_all', JSON.stringify(allCategories))
+			await Redis.set('categories_all', JSON.stringify(allCategories.map((category) => {
+				return {
+					...category,
+					products: []
+				}
+			})))
 			await Redis.set('categories', JSON.stringify(allCategories))
 		}
 		
