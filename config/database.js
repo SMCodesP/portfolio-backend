@@ -79,8 +79,8 @@ module.exports = {
       password: Env.get('DB_PASSWORD', ''),
       database: Env.get('DB_DATABASE', 'adonis'),
       ssl: {
-        require: false, // This will help you. But you will see nwe error
-        rejectUnauthorized: false // This line will fix new error
+        require: false,
+        rejectUnauthorized: false
       }
     },
     debug: Env.get('DB_DEBUG', false)
