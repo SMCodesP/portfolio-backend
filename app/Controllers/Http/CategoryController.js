@@ -6,7 +6,7 @@ const Category = use("App/Models/Category")
 class ProductCategoryController {
 	
 	async store({ request }) { 
-		const data = request.only(["title", "link", "name"])
+		const data = request.only(["title", "link", "name", "description", "banner_url"])
 		
 		const response = await Category.create(data)
 		
@@ -15,6 +15,7 @@ class ProductCategoryController {
 	
 	async index({ request }) {
 		const id = request.input('id')
+		const link = request.input('link')
 		const all = request.input('all')
 		
 		if (id) {
@@ -27,12 +28,29 @@ class ProductCategoryController {
 			return category
 		} else {
 
-			let categories = (all) ? await Category
-				.query()
-				.with('products')
-				.fetch() : await Category.all()
-				
-			return categories
+			if (link) {
+				const category = (all)
+					? await Category
+						.query()
+						.with('products')
+						.where('link', link)
+						.first()
+					: await Category
+						.query()
+						.where('link', link)
+						.first()
+
+				console.log(category)
+
+				return category || []
+			} else {
+				let categories = (all) ? await Category
+					.query()
+					.with('products')
+					.fetch() : await Category.all()
+					
+				return categories
+			}
 		}
 	}
 	
