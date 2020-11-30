@@ -30,6 +30,19 @@ class ProductController {
 
 		if (id) {
 
+			const products = (all)
+				? await Product
+					.query()
+					.with('category')
+					.where('id', id)
+					.first()
+				: await Product
+					.query()
+					.where('id', id)
+					.first()
+
+			return products			
+
 		} else {
 			const products = (all) ? await Product
 			.query()
