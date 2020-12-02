@@ -1,6 +1,5 @@
 'use strict'
 
-const Redis = use('Redis')
 const Category = use("App/Models/Category")
 
 class ProductCategoryController {
@@ -19,7 +18,7 @@ class ProductCategoryController {
 		const all = request.input('all')
 		
 		if (id) {
-			const category = await Category.findOrFail(id)
+			let category = await Category.findOrFail(id)
 			
 			if (all) {
 				await category.load('products')
@@ -29,7 +28,7 @@ class ProductCategoryController {
 		} else {
 
 			if (link) {
-				const category = (all)
+				let category = (all)
 					? await Category
 						.query()
 						.with('products')

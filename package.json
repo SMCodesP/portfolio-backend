@@ -29,6 +29,7 @@
     "@adonisjs/validator": "^5.0.6",
     "adonis-acl": "^1.1.1",
     "adonis-recaptcha2": "^1.2.1",
+    "mercadopago": "^1.5.1",
     "pg": "^8.4.1"
   },
   "devDependencies": {},

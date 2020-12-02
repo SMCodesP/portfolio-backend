@@ -36,13 +36,18 @@ Route.group(() => {
 		.post('/products', 'ProductController.store')
 		.middleware('can:create_plugin')
 		.validator('CreateProduct')
+		
+	Route
+		.post('/mercadopago', 'MercadoPagoController.store')
 })
 	.middleware('auth:jwt');
 
 Route
 	.get('/categories', 'CategoryController.index')
+
 Route
 	.get('/products', 'ProductController.index')
+
 
 Route.group(() => {
 	Route
