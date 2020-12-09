@@ -36,9 +36,9 @@ class MercadoPagoController {
         const response = await mercadopago.preferences.create({
             items,
             back_urls: {
-                success: `${process.env.FRONT_END}/paid`,
-                failure: `${process.env.FRONT_END}/paid`,
-                pending: `${process.env.FRONT_END}/paid`
+                success: `${process.env.FRONT_END}/paid?back_url_status=success`,
+                failure: `${process.env.FRONT_END}/paid?back_url_status=failure`,
+                pending: `${process.env.FRONT_END}/paid?back_url_status=pending`
             },
             auto_return: "approved"
         })
